@@ -12,8 +12,14 @@ import {
 const AddScreen = ({ navigation }) => {
   const [deviceId, setdeviceId] = useState();
   const handleStartButtonPress = () => {
-    navigation.navigate("Home");
+    if (deviceId) {
+      navigation.navigate("Home", { deviceId });
+      setdeviceId("");
+    } else {
+      alert("Please enter the device ID");
+    }
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <Image
