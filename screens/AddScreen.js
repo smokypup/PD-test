@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#DDE1E1",
     padding: 10,
+    fontFamily: "asap",
   },
   button: {
     top: 20,
