@@ -1,8 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image, View } from "react-native";
+import * as Font from "expo-font";
+
 import HomeScreen from "../screens/HomeScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import AddScreen from "../screens/AddScreen";
+
+Font.loadAsync({
+  asap: require("../assets/fonts/Asap-Regular.ttf"),
+});
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +24,6 @@ const Tabs = () => {
             bottom: 20,
             left: 20,
             right: 20,
-            elevation: 0,
             backgroundColor: "#25BEA0",
             borderRadius: 25,
             height: 65,
@@ -37,8 +42,8 @@ const Tabs = () => {
                 source={require("../assets/home.png")}
                 resizeMode="contain"
                 style={{
-                  width: 25,
-                  height: 25,
+                  width: focused ? 30 : 25,
+                  height: focused ? 30 : 25,
                   tintColor: focused ? "#FACC43" : "#FFFFFF",
                 }}
               />
@@ -56,8 +61,8 @@ const Tabs = () => {
                 source={require("../assets/add.png")}
                 resizeMode="contain"
                 style={{
-                  width: 25,
-                  height: 25,
+                  width: focused ? 30 : 25,
+                  height: focused ? 30 : 25,
                   tintColor: focused ? "#FACC43" : "#FFFFFF",
                 }}
               />
@@ -75,8 +80,8 @@ const Tabs = () => {
                 source={require("../assets/history.png")}
                 resizeMode="contain"
                 style={{
-                  width: 25,
-                  height: 25,
+                  width: focused ? 30 : 25,
+                  height: focused ? 30 : 25,
                   tintColor: focused ? "#FACC43" : "#FFFFFF",
                 }}
               />

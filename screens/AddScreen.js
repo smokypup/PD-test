@@ -1,12 +1,45 @@
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 
 const AddScreen = ({ navigation }) => {
+  const [deviceId, setdeviceId] = useState();
+
   return (
-    <View style={styles.container}>
-      <Text> Add </Text>
-      <Button title="Click Here" onPress={() => alert("Button Clicked!")} />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Image
+        source={require("../assets/deviceId.jpg")}
+        resizeMode="contain"
+        style={{
+          position: "absolute",
+          top: 73,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      />
+      <Text style={styles.textStyle}>
+        Check the back of your device and enter below the ID of your device
+      </Text>
+      <TextInput
+        style={styles.Input}
+        placeholder="Enter the device ID"
+        onChangeText={(val) => setdeviceId(val)}
+        textAlign="center"
+      />
+      <TouchableOpacity>
+        <View style={styles.button}>
+          <Text style={styles.buttonText}> START </Text>
+        </View>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
@@ -18,5 +51,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
+  },
+  textStyle: {
+    fontSize: 20,
+    paddingHorizontal: 20,
+    textAlign: "center",
+    top: -10,
+    fontFamily: "asap",
+    color: "#374353",
+    paddingBottom: 50,
+    paddingTop: 50,
+  },
+  Input: {
+    top: -20,
+    width: 250,
+    height: 44,
+    borderRadius: 10,
+    backgroundColor: "#DDE1E1",
+    padding: 10,
+  },
+  button: {
+    top: 20,
+    borderRadius: 8,
+    backgroundColor: "#FACC43",
+    padding: 15,
+    width: 161,
+  },
+  buttonText: {
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 18,
+    color: "white",
+    fontFamily: "asap",
   },
 });
