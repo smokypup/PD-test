@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   SafeAreaView,
   Image,
@@ -12,7 +11,9 @@ import {
 
 const AddScreen = ({ navigation }) => {
   const [deviceId, setdeviceId] = useState();
-
+  const handleStartButtonPress = () => {
+    navigation.navigate("Home");
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -34,7 +35,7 @@ const AddScreen = ({ navigation }) => {
         onChangeText={(val) => setdeviceId(val)}
         textAlign="center"
       />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleStartButtonPress}>
         <View style={styles.button}>
           <Text style={styles.buttonText}> START </Text>
         </View>
