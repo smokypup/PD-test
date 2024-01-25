@@ -8,10 +8,15 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import { Directions } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = ({ route }) => {
   const { deviceIds } = route.params || {};
+  const navigation = useNavigation();
+
+  const handleCheckPress = () => {
+    navigation.navigate("Check");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,7 +34,7 @@ const HomeScreen = ({ route }) => {
               <Text style={styles.header}>{` Device ID: ${deviceId}`}</Text>
               <Text style={styles.subHeader}> Progress </Text>
               <View style={styles.ButtonContainer}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleCheckPress}>
                   <View style={styles.button}>
                     <Text style={styles.buttonText}> CHECK </Text>
                   </View>
@@ -61,14 +66,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 40,
     width: 370,
-    height: 60,
+    height: 40,
     borderRadius: 10,
     backgroundColor: "white",
     padding: 20,
   },
   input: {
     flex: 1,
-    height: 60,
+    height: 50,
     fontFamily: "asap",
   },
   inputImage: {
@@ -113,17 +118,17 @@ const styles = StyleSheet.create({
     width: 80,
   },
   button1: {
-    left: 70,
+    left: 90,
     borderRadius: 8,
     backgroundColor: "#FACC43",
     padding: 9,
-    width: 100,
+    width: 80,
   },
   buttonText: {
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: 18,
+    fontSize: 15,
     color: "white",
     fontFamily: "asap",
   },
@@ -131,7 +136,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: 18,
+    fontSize: 15,
     color: "white",
     fontFamily: "asap",
   },
