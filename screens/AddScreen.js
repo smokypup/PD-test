@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 const AddScreen = ({ navigation }) => {
   const [EnteredDeviceId, setEnteredDeviceId] = useState("");
   const [deviceIds, setDeviceIds] = useState([]);
+  const inputRef = useRef();
 
   function deviceIdHandler(enteredText) {
     setEnteredDeviceId(enteredText);
@@ -20,6 +21,10 @@ const AddScreen = ({ navigation }) => {
   function addDeviceIdHandler() {
     setDeviceIds((currentDeviceIds) => [...currentDeviceIds, EnteredDeviceId]);
     navigation.navigate("Home", { deviceIds: [...deviceIds, EnteredDeviceId] });
+
+    if (inputRef.current) {
+      inputRef.current.clear();
+    }
   }
 
   return (
@@ -42,6 +47,7 @@ const AddScreen = ({ navigation }) => {
         placeholder="Enter the device ID"
         onChangeText={deviceIdHandler}
         textAlign="center"
+        ref={inputRef}
       />
       <TouchableOpacity onPress={addDeviceIdHandler}>
         <View style={styles.button}>

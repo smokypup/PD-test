@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
 } from "react-native";
+import { Directions } from "react-native-gesture-handler";
 
 const HomeScreen = ({ route }) => {
   const { deviceIds } = route.params || {};
@@ -27,11 +28,18 @@ const HomeScreen = ({ route }) => {
             <View key={index} style={styles.deviceIdBox}>
               <Text style={styles.header}>{` Device ID: ${deviceId}`}</Text>
               <Text style={styles.subHeader}> Progress </Text>
-              <TouchableOpacity>
-                <View style={styles.button}>
-                  <Text style={styles.buttonText}> CHECK </Text>
-                </View>
-              </TouchableOpacity>
+              <View style={styles.ButtonContainer}>
+                <TouchableOpacity>
+                  <View style={styles.button}>
+                    <Text style={styles.buttonText}> CHECK </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <View style={styles.button1}>
+                    <Text style={styles.buttonText1}> REMOVE </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
           ))}
       </View>
@@ -92,6 +100,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginTop: 5,
   },
+  ButtonContainer: {
+    flexDirection: "row",
+    top: 6,
+    right: -1,
+  },
   button: {
     left: 260,
     borderRadius: 8,
@@ -99,7 +112,22 @@ const styles = StyleSheet.create({
     padding: 9,
     width: 80,
   },
+  button1: {
+    left: 70,
+    borderRadius: 8,
+    backgroundColor: "#FACC43",
+    padding: 9,
+    width: 100,
+  },
   buttonText: {
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 18,
+    color: "white",
+    fontFamily: "asap",
+  },
+  buttonText1: {
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
