@@ -10,15 +10,17 @@ import {
 } from "react-native";
 
 const AddScreen = ({ navigation }) => {
-  const [deviceId, setdeviceId] = useState();
-  const handleStartButtonPress = () => {
-    if (deviceId) {
-      navigation.navigate("Home", { deviceId });
-      setdeviceId("");
-    } else {
-      alert("Please enter the device ID");
-    }
-  };
+  const [EnteredDeviceId, setEnteredDeviceId] = useState("");
+  const [deviceIds, setDeviceIds] = useState([]);
+
+  function deviceIdHandler(enteredText) {
+    setEnteredDeviceId(enteredText);
+  }
+
+  function addDeviceIdHandler() {
+    setDeviceIds((currentDeviceIds) => [...currentDeviceIds, EnteredDeviceId]);
+    navigation.navigate("Home", { deviceIds: [...deviceIds, EnteredDeviceId] });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,10 +40,10 @@ const AddScreen = ({ navigation }) => {
       <TextInput
         style={styles.Input}
         placeholder="Enter the device ID"
-        onChangeText={(val) => setdeviceId(val)}
+        onChangeText={deviceIdHandler}
         textAlign="center"
       />
-      <TouchableOpacity onPress={handleStartButtonPress}>
+      <TouchableOpacity onPress={addDeviceIdHandler}>
         <View style={styles.button}>
           <Text style={styles.buttonText}> START </Text>
         </View>

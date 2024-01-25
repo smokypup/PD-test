@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 const HomeScreen = ({ route }) => {
-  const { deviceId } = route.params || {};
+  const { deviceIds } = route.params || {};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -21,16 +21,19 @@ const HomeScreen = ({ route }) => {
         />
         <TextInput style={styles.input} placeholder="Search" />
       </View>
-      <View style={styles.box}>
-        {deviceId && (
-          <Text style={styles.header}>{` Device ID: ${deviceId}`}</Text>
-        )}
-        <Text style={styles.subHeader}> Progress </Text>
-        <TouchableOpacity>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}> CHECK </Text>
-          </View>
-        </TouchableOpacity>
+      <View style={styles.deviceIdContainer}>
+        {deviceIds &&
+          deviceIds.map((deviceId, index) => (
+            <View key={index} style={styles.deviceIdBox}>
+              <Text style={styles.header}>{` Device ID: ${deviceId}`}</Text>
+              <Text style={styles.subHeader}> Progress </Text>
+              <TouchableOpacity>
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}> CHECK </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))}
       </View>
     </SafeAreaView>
   );
@@ -55,22 +58,25 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
   },
-  inputImage: {
-    width: 15,
-    height: 15,
-    marginRight: 10,
-  },
   input: {
     flex: 1,
     height: 60,
     fontFamily: "asap",
   },
-  box: {
-    marginTop: 30,
+  inputImage: {
+    width: 15,
+    height: 15,
+    marginRight: 10,
+  },
+  deviceIdContainer: {
+    marginTop: -30,
+    alignItems: "center",
+  },
+  deviceIdBox: {
     borderWidth: 2,
-    padding: 30,
+    padding: 15,
     width: 370,
-    top: -40,
+    marginTop: 30,
     borderRadius: 20,
     borderColor: "#25BEA0",
     backgroundColor: "#fafafa",
@@ -87,8 +93,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   button: {
-    top: 20,
-    left: 240,
+    left: 260,
     borderRadius: 8,
     backgroundColor: "#FACC43",
     padding: 9,
