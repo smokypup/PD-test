@@ -8,14 +8,27 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const CheckScreen = () => {
   const [rulModalOpen, setRulModalOpen] = useState(false);
   const [sohModalOpen, setSohModalOpen] = useState(false);
   const [socModalOpen, setSocModalOpen] = useState(false);
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.BackButton}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Image
+            source={require("../assets/Back1.png")}
+            style={{
+              width: 40,
+              height: 40,
+            }}
+          />
+        </TouchableOpacity>
+      </View>
       {/* MODAL FOR RUL */}
       <Modal visible={rulModalOpen} animationType="fade">
         <SafeAreaView style={styles.ModalContent}>
@@ -163,11 +176,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    alignItems: "center",
     backgroundColor: "#DDE1E1",
   },
   Boxes: {
-    marginTop: 200,
+    marginTop: 150,
+    alignSelf: "center",
   },
   HeaderTextIcon: {
     flexDirection: "row",
@@ -253,6 +266,10 @@ const styles = StyleSheet.create({
     height: 141,
     top: 80,
     alignSelf: "center",
+  },
+  BackButton: {
+    marginTop: 20,
+    marginLeft: 20,
   },
 });
 

@@ -10,22 +10,27 @@ import {
 } from "react-native";
 
 const AddScreen = ({ navigation }) => {
-  const [EnteredDeviceId, setEnteredDeviceId] = useState("");
+  const [enteredDeviceId, setEnteredDeviceId] = useState("");
   const [deviceIds, setDeviceIds] = useState([]);
   const inputRef = useRef();
 
-  function deviceIdHandler(enteredText) {
-    setEnteredDeviceId(enteredText);
-  }
+  const addDeviceIdHandler = () => {
+    // Combine the existing deviceIds with the new one
+    const updatedDeviceIds = [...deviceIds, enteredDeviceId];
+    setDeviceIds(updatedDeviceIds);
 
-  function addDeviceIdHandler() {
-    setDeviceIds((currentDeviceIds) => [...currentDeviceIds, EnteredDeviceId]);
-    navigation.navigate("Home", { deviceIds: [...deviceIds, EnteredDeviceId] });
+    // Reset the navigation stack to HomeScreen with the updated deviceIds
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home", params: { deviceIds: updatedDeviceIds } }],
+    });
 
+    // Clear the input
+    setEnteredDeviceId("");
     if (inputRef.current) {
       inputRef.current.clear();
     }
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,10 +38,8 @@ const AddScreen = ({ navigation }) => {
         source={require("../assets/deviceId.jpg")}
         resizeMode="contain"
         style={{
-          position: "absolute",
-          top: 73,
-          justifyContent: "center",
-          alignItems: "center",
+          alignSelf: "center",
+          marginTop: 60,
         }}
       />
       <Text style={styles.textStyle}>
@@ -45,7 +48,7 @@ const AddScreen = ({ navigation }) => {
       <TextInput
         style={styles.Input}
         placeholder="Enter the device ID"
-        onChangeText={deviceIdHandler}
+        onChangeText={(text) => setEnteredDeviceId(text)}
         textAlign="center"
         ref={inputRef}
       />
@@ -63,8 +66,7 @@ export default AddScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     backgroundColor: "white",
   },
   textStyle: {
@@ -85,6 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#DDE1E1",
     padding: 10,
     fontFamily: "asap",
+    alignSelf: "center",
   },
   button: {
     top: 20,
@@ -92,6 +95,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FACC43",
     padding: 15,
     width: 161,
+    alignSelf: "center",
   },
   buttonText: {
     textAlign: "center",

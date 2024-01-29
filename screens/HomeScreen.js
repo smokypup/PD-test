@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,45 +8,84 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = ({ route }) => {
-  const { deviceIds } = route.params || {};
+  const { deviceIds: initialDeviceIds } = route.params || {};
+  const [deviceIds, setDeviceIds] = useState(initialDeviceIds || []);
+  const [originalDeviceIds, setOriginalDeviceIds] = useState(
+    initialDeviceIds || []
+  );
+  const [searchText, setSearchText] = useState("");
   const navigation = useNavigation();
 
   const handleCheckPress = () => {
     navigation.navigate("Check");
   };
 
+  const handleRemovePress = (index) => {
+    const updatedDeviceIds = [...deviceIds];
+    updatedDeviceIds.splice(index, 1);
+    setDeviceIds(updatedDeviceIds);
+    setOriginalDeviceIds(updatedDeviceIds);
+    setSearchText("");
+  };
+
+  const handleSearch = () => {
+    const filteredDeviceIds = originalDeviceIds.filter((deviceId) =>
+      deviceId.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setDeviceIds(filteredDeviceIds);
+  };
+
+  useEffect(() => {
+    // Update deviceIds state when the route parameters change
+    setDeviceIds(initialDeviceIds || []);
+    setOriginalDeviceIds(initialDeviceIds || []);
+  }, [initialDeviceIds]);
+
+  useFocusEffect(() => {
+    // Update deviceIds state when the screen is focused
+    setDeviceIds(originalDeviceIds);
+  });
+
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.SearchIcon}>
+        <TouchableOpacity onPress={handleSearch}>
+          <Image
+            source={require("../assets/Search.png")}
+            style={styles.inputImage}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.inputContainer}>
-        <Image
-          source={require("../assets/Search.png")}
-          style={styles.inputImage}
+        <TextInput
+          style={styles.input}
+          placeholder="Search"
+          value={searchText}
+          onChangeText={(text) => setSearchText(text)}
         />
-        <TextInput style={styles.input} placeholder="Search" />
       </View>
       <View style={styles.deviceIdContainer}>
-        {deviceIds &&
-          deviceIds.map((deviceId, index) => (
-            <View key={index} style={styles.deviceIdBox}>
-              <Text style={styles.header}>{` Device ID: ${deviceId}`}</Text>
-              <Text style={styles.subHeader}> Progress </Text>
-              <View style={styles.ButtonContainer}>
-                <TouchableOpacity onPress={handleCheckPress}>
-                  <View style={styles.button}>
-                    <Text style={styles.buttonText}> CHECK </Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={styles.button1}>
-                    <Text style={styles.buttonText1}> REMOVE </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
+        {deviceIds.map((deviceId, index) => (
+          <View key={index} style={styles.deviceIdBox}>
+            <Text style={styles.header}>{` Device ID: ${deviceId}`}</Text>
+            <Text style={styles.subHeader}> Progress </Text>
+            <View style={styles.ButtonContainer}>
+              <TouchableOpacity onPress={handleCheckPress}>
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}> CHECK </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleRemovePress(index)}>
+                <View style={styles.button1}>
+                  <Text style={styles.buttonText1}> REMOVE </Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          ))}
+          </View>
+        ))}
       </View>
     </SafeAreaView>
   );
@@ -63,9 +102,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    alignSelf: "flex-start",
+    left: 20,
     marginTop: 20,
     marginBottom: 40,
-    width: 370,
+    width: 330,
     height: 40,
     borderRadius: 10,
     backgroundColor: "white",
@@ -76,10 +117,16 @@ const styles = StyleSheet.create({
     height: 50,
     fontFamily: "asap",
   },
+  SearchIcon: {
+    position: "absolute",
+    marginTop: 50,
+    right: 20,
+    alignSelf: "flex-end",
+  },
   inputImage: {
-    width: 15,
-    height: 15,
-    marginRight: 10,
+    width: 20,
+    height: 20,
+    marginRight: 5,
   },
   deviceIdContainer: {
     marginTop: -30,
@@ -139,6 +186,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "white",
     fontFamily: "asap",
+  },
+  searchButton: {
+    borderRadius: 8,
+    backgroundColor: "#25BEA0",
+    padding: 9,
+    marginLeft: 10,
   },
 });
 
