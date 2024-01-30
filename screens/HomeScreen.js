@@ -8,7 +8,7 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = ({ route }) => {
   const { deviceIds: initialDeviceIds } = route.params || {};
@@ -40,14 +40,26 @@ const HomeScreen = ({ route }) => {
 
   useEffect(() => {
     // Update deviceIds state when the route parameters change
-    setDeviceIds(initialDeviceIds || []);
     setOriginalDeviceIds(initialDeviceIds || []);
+    setDeviceIds(initialDeviceIds || []);
   }, [initialDeviceIds]);
 
-  useFocusEffect(() => {
-    // Update deviceIds state when the screen is focused
-    setDeviceIds(originalDeviceIds);
-  });
+  useEffect(() => {
+    // Update deviceIds state when the navigation state changes
+    const unsubscribe = navigation.addListener("focus", () => {
+      setDeviceIds(originalDeviceIds);
+    });
+
+    return unsubscribe;
+  }, [originalDeviceIds, navigation]);
+
+  // Update deviceIds state when the searchText changes
+  useEffect(() => {
+    const filteredDeviceIds = originalDeviceIds.filter((deviceId) =>
+      deviceId.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setDeviceIds(filteredDeviceIds);
+  }, [searchText, originalDeviceIds]);
 
   return (
     <SafeAreaView style={styles.container}>

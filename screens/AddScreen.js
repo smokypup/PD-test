@@ -19,11 +19,8 @@ const AddScreen = ({ navigation }) => {
     const updatedDeviceIds = [...deviceIds, enteredDeviceId];
     setDeviceIds(updatedDeviceIds);
 
-    // Reset the navigation stack to HomeScreen with the updated deviceIds
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Home", params: { deviceIds: updatedDeviceIds } }],
-    });
+    // Navigate back to HomeScreen with the updated deviceIds
+    navigation.navigate("Home", { deviceIds: updatedDeviceIds });
 
     // Clear the input
     setEnteredDeviceId("");
