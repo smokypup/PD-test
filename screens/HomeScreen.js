@@ -26,8 +26,11 @@ const HomeScreen = ({ route }) => {
   const handleRemovePress = (index) => {
     const updatedDeviceIds = [...deviceIds];
     updatedDeviceIds.splice(index, 1);
+
+    // Update both deviceIds and originalDeviceIds
     setDeviceIds(updatedDeviceIds);
     setOriginalDeviceIds(updatedDeviceIds);
+
     setSearchText("");
   };
 
