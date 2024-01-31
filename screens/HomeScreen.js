@@ -8,48 +8,33 @@ import {
   Image,
   TextInput,
 } from "react-native";
+import { useDeviceContext } from "../DeviceContext";
 
-const HomeScreen = ({ route, navigation }) => {
-  const { deviceIds } = route.params || [];
-  const [originalDeviceIds, setOriginalDeviceIds] = useState(deviceIds || []);
-  const [displayedDeviceIds, setDisplayedDeviceIds] = useState(deviceIds || []);
+const HomeScreen = ({ navigation }) => {
+  const { state, dispatch } = useDeviceContext();
   const [searchText, setSearchText] = useState("");
-  const [isRemoving, setIsRemoving] = useState(false);
 
   const handleCheckPress = () => {
     navigation.navigate("Check");
   };
 
-  const handleRemovePress = (index) => {
-    const updatedDeviceIds = [...originalDeviceIds];
-    updatedDeviceIds.splice(index, 1);
-
-    setOriginalDeviceIds(updatedDeviceIds);
-    setDisplayedDeviceIds(updatedDeviceIds);
-    setSearchText("");
-  };
-
-  const handleSearch = () => {
-    const filteredDeviceIds = originalDeviceIds.filter((deviceId) =>
-      deviceId.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setDisplayedDeviceIds(filteredDeviceIds);
+  const handleRemovePress = (deviceId) => {
+    dispatch({ type: "REMOVE_DEVICE", payload: deviceId });
   };
 
   useEffect(() => {
-    const unsubscribeFocus = navigation.addListener("focus", () => {
-      // Update displayedDeviceIds when the screen is focused
-      setDisplayedDeviceIds(originalDeviceIds);
-    });
+    // Update displayedDeviceIds when the screen is focused
+    setDisplayedDeviceIds(state.deviceIds);
+  }, [state.deviceIds]);
 
-    return unsubscribeFocus;
-  }, [originalDeviceIds, navigation]);
+  const [originalDeviceIds, setOriginalDeviceIds] = useState(state.deviceIds);
+  const [displayedDeviceIds, setDisplayedDeviceIds] = useState(state.deviceIds);
 
   useEffect(() => {
     // Update displayedDeviceIds when deviceIds prop changes
-    setOriginalDeviceIds(deviceIds || []);
-    setDisplayedDeviceIds(deviceIds || []);
-  }, [deviceIds]);
+    setOriginalDeviceIds(state.deviceIds);
+    setDisplayedDeviceIds(state.deviceIds);
+  }, [state.deviceIds]);
 
   useEffect(() => {
     const filteredDeviceIds = originalDeviceIds.filter((deviceId) =>
@@ -61,7 +46,7 @@ const HomeScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.SearchIcon}>
-        <TouchableOpacity onPress={handleSearch}>
+        <TouchableOpacity>
           <Image
             source={require("../assets/Search.png")}
             style={styles.inputImage}
@@ -87,7 +72,7 @@ const HomeScreen = ({ route, navigation }) => {
                   <Text style={styles.buttonText}> CHECK </Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleRemovePress(index)}>
+              <TouchableOpacity onPress={() => handleRemovePress(deviceId)}>
                 <View style={styles.button1}>
                   <Text style={styles.buttonText1}> REMOVE </Text>
                 </View>

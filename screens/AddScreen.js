@@ -9,17 +9,20 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { useDeviceContext } from "../DeviceContext"; // Adjust the path accordingly
 
-const AddScreen = ({ navigation, route }) => {
-  const initialDeviceIds = route.params?.deviceIds || [];
+const AddScreen = ({ navigation }) => {
+  const { state, dispatch } = useDeviceContext();
+  const initialDeviceIds = state.deviceIds || [];
   const [enteredDeviceId, setEnteredDeviceId] = useState("");
   const [deviceIds, setDeviceIds] = useState(initialDeviceIds);
   const inputRef = useRef();
 
   const addDeviceIdHandler = () => {
     const updatedDeviceIds = [...deviceIds, enteredDeviceId];
-    setDeviceIds(updatedDeviceIds);
+    dispatch({ type: "ADD_DEVICE", payload: enteredDeviceId }); // Update the global state
 
+    setDeviceIds(updatedDeviceIds);
     setEnteredDeviceId("");
     if (inputRef.current) {
       inputRef.current.clear();
@@ -33,9 +36,10 @@ const AddScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     useCallback(() => {
-      const newDeviceIds = route.params?.deviceIds || [];
+      // Update local state when the screen is focused
+      const newDeviceIds = state.deviceIds || [];
       setDeviceIds(newDeviceIds);
-    }, [route.params?.deviceIds])
+    }, [state.deviceIds])
   );
 
   useEffect(() => {

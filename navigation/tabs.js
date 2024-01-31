@@ -21,7 +21,11 @@ const AddStackNavigator = () => (
       headerShown: false,
     }}
   >
-    <AddStack.Screen name="AddStackScreen" component={AddScreen} />
+    <AddStack.Screen
+      name="AddStackScreen"
+      component={AddScreen}
+      initialParams={{ deviceIds: [] }} // Add the initialParams here
+    />
   </AddStack.Navigator>
 );
 
