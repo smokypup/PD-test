@@ -37,17 +37,19 @@ const HomeScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    setOriginalDeviceIds(deviceIds || []);
-    setDisplayedDeviceIds(deviceIds || []);
-  }, [deviceIds]);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    const unsubscribeFocus = navigation.addListener("focus", () => {
+      // Update displayedDeviceIds when the screen is focused
       setDisplayedDeviceIds(originalDeviceIds);
     });
 
-    return unsubscribe;
+    return unsubscribeFocus;
   }, [originalDeviceIds, navigation]);
+
+  useEffect(() => {
+    // Update displayedDeviceIds when deviceIds prop changes
+    setOriginalDeviceIds(deviceIds || []);
+    setDisplayedDeviceIds(deviceIds || []);
+  }, [deviceIds]);
 
   useEffect(() => {
     const filteredDeviceIds = originalDeviceIds.filter((deviceId) =>
@@ -193,12 +195,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "white",
     fontFamily: "asap",
-  },
-  searchButton: {
-    borderRadius: 8,
-    backgroundColor: "#25BEA0",
-    padding: 9,
-    marginLeft: 10,
   },
 });
 

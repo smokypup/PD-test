@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -25,7 +25,7 @@ const AddScreen = ({ navigation, route }) => {
       inputRef.current.clear();
     }
 
-    // Instead of navigating to "Home" and using navigation.goBack(), navigate directly to "Home" and pass the updated deviceIds
+    // Navigate to "Home" screen and pass the updated deviceIds
     navigation.navigate("Home", {
       deviceIds: updatedDeviceIds,
     });
@@ -37,6 +37,13 @@ const AddScreen = ({ navigation, route }) => {
       setDeviceIds(newDeviceIds);
     }, [route.params?.deviceIds])
   );
+
+  useEffect(() => {
+    // Update the deviceIds in the route params whenever it changes
+    navigation.setParams({
+      deviceIds: deviceIds,
+    });
+  }, [deviceIds, navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -58,7 +65,11 @@ const AddScreen = ({ navigation, route }) => {
         textAlign="center"
         ref={inputRef}
       />
-      <TouchableOpacity onPress={addDeviceIdHandler}>
+      <TouchableOpacity
+        onPress={() => {
+          addDeviceIdHandler();
+        }}
+      >
         <View style={styles.button}>
           <Text style={styles.buttonText}> START </Text>
         </View>
