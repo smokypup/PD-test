@@ -8,18 +8,12 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
-const HomeScreen = ({ route }) => {
-  const { displayedDeviceIds: initialDeviceIds } = route.params || {};
-  const [originalDeviceIds, setOriginalDeviceIds] = useState(
-    initialDeviceIds || []
-  );
-  const [displayedDeviceIds, setDisplayedDeviceIds] = useState(
-    initialDeviceIds || []
-  );
+const HomeScreen = ({ route, navigation }) => {
+  const { deviceIds } = route.params || [];
+  const [originalDeviceIds, setOriginalDeviceIds] = useState(deviceIds || []);
+  const [displayedDeviceIds, setDisplayedDeviceIds] = useState(deviceIds || []);
   const [searchText, setSearchText] = useState("");
-  const navigation = useNavigation();
   const [isRemoving, setIsRemoving] = useState(false);
 
   const handleCheckPress = () => {
@@ -30,17 +24,8 @@ const HomeScreen = ({ route }) => {
     const updatedDeviceIds = [...originalDeviceIds];
     updatedDeviceIds.splice(index, 1);
 
-    console.log("Updated Device Ids:", updatedDeviceIds);
-
-    // Set the flag to indicate that removal is happening
-    setIsRemoving(true);
-
-    // Update the originalDeviceIds state first
     setOriginalDeviceIds(updatedDeviceIds);
-
-    // After the state is updated, reset the displayedDeviceIds state
     setDisplayedDeviceIds(updatedDeviceIds);
-
     setSearchText("");
   };
 
@@ -49,34 +34,12 @@ const HomeScreen = ({ route }) => {
       deviceId.toLowerCase().includes(searchText.toLowerCase())
     );
     setDisplayedDeviceIds(filteredDeviceIds);
-
-    console.log("Filtered Device Ids:", filteredDeviceIds);
   };
 
   useEffect(() => {
-    console.log("Original Device Ids after removal:", originalDeviceIds);
-
-    // Update the originalDeviceIds state first
-    setOriginalDeviceIds(originalDeviceIds);
-
-    // Always update displayedDeviceIds with the latest originalDeviceIds
-    setDisplayedDeviceIds(originalDeviceIds);
-
-    console.log("Displayed Device Ids after removal:", displayedDeviceIds);
-
-    // Navigation should only happen if it's not triggered by a removal action
-    if (!isRemoving) {
-      navigation.navigate("Home", { displayedDeviceIds: originalDeviceIds });
-    }
-
-    // Reset the flag after navigation check
-    setIsRemoving(false);
-  }, [originalDeviceIds, isRemoving, navigation]);
-
-  // Ensure that displayedDeviceIds is updated when the component mounts
-  useEffect(() => {
-    setDisplayedDeviceIds(originalDeviceIds);
-  }, [originalDeviceIds]);
+    setOriginalDeviceIds(deviceIds || []);
+    setDisplayedDeviceIds(deviceIds || []);
+  }, [deviceIds]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -91,8 +54,6 @@ const HomeScreen = ({ route }) => {
       deviceId.toLowerCase().includes(searchText.toLowerCase())
     );
     setDisplayedDeviceIds(filteredDeviceIds);
-
-    console.log("Filtered Device Ids:", filteredDeviceIds);
   }, [searchText, originalDeviceIds]);
 
   return (

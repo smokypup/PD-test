@@ -18,26 +18,23 @@ const AddScreen = ({ navigation, route }) => {
 
   const addDeviceIdHandler = () => {
     const updatedDeviceIds = [...deviceIds, enteredDeviceId];
-
-    console.log("Updated Device Ids in AddScreen:", updatedDeviceIds);
-
-    // Update the deviceIds state
     setDeviceIds(updatedDeviceIds);
 
-    // Navigate to Home screen with the updated deviceIds
-    navigation.navigate("Home", { displayedDeviceIds: updatedDeviceIds });
-
-    // Clear the input and reset enteredDeviceId
     setEnteredDeviceId("");
     if (inputRef.current) {
       inputRef.current.clear();
     }
+
+    // Instead of navigating to "Home" and using navigation.goBack(), navigate directly to "Home" and pass the updated deviceIds
+    navigation.navigate("Home", {
+      deviceIds: updatedDeviceIds,
+    });
   };
 
-  // Use useFocusEffect to reset state when the screen gains focus
   useFocusEffect(
     useCallback(() => {
-      setDeviceIds(route.params?.deviceIds || []);
+      const newDeviceIds = route.params?.deviceIds || [];
+      setDeviceIds(newDeviceIds);
     }, [route.params?.deviceIds])
   );
 
