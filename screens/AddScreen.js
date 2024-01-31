@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,26 +8,38 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
-const AddScreen = ({ navigation }) => {
+const AddScreen = ({ navigation, route }) => {
+  const initialDeviceIds = route.params?.deviceIds || [];
   const [enteredDeviceId, setEnteredDeviceId] = useState("");
-  const [deviceIds, setDeviceIds] = useState([]);
+  const [deviceIds, setDeviceIds] = useState(initialDeviceIds);
   const inputRef = useRef();
 
   const addDeviceIdHandler = () => {
-    // Combine the existing deviceIds with the new one
     const updatedDeviceIds = [...deviceIds, enteredDeviceId];
+
+    console.log("Updated Device Ids in AddScreen:", updatedDeviceIds);
+
+    // Update the deviceIds state
     setDeviceIds(updatedDeviceIds);
 
-    // Navigate back to HomeScreen with the updated deviceIds
-    navigation.navigate("Home", { deviceIds: updatedDeviceIds });
+    // Navigate to Home screen with the updated deviceIds
+    navigation.navigate("Home", { displayedDeviceIds: updatedDeviceIds });
 
-    // Clear the input
+    // Clear the input and reset enteredDeviceId
     setEnteredDeviceId("");
     if (inputRef.current) {
       inputRef.current.clear();
     }
   };
+
+  // Use useFocusEffect to reset state when the screen gains focus
+  useFocusEffect(
+    useCallback(() => {
+      setDeviceIds(route.params?.deviceIds || []);
+    }, [route.params?.deviceIds])
+  );
 
   return (
     <SafeAreaView style={styles.container}>

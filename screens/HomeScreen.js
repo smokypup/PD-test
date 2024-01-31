@@ -11,25 +11,35 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = ({ route }) => {
-  const { deviceIds: initialDeviceIds } = route.params || {};
-  const [deviceIds, setDeviceIds] = useState(initialDeviceIds || []);
+  const { displayedDeviceIds: initialDeviceIds } = route.params || {};
   const [originalDeviceIds, setOriginalDeviceIds] = useState(
+    initialDeviceIds || []
+  );
+  const [displayedDeviceIds, setDisplayedDeviceIds] = useState(
     initialDeviceIds || []
   );
   const [searchText, setSearchText] = useState("");
   const navigation = useNavigation();
+  const [isRemoving, setIsRemoving] = useState(false);
 
   const handleCheckPress = () => {
     navigation.navigate("Check");
   };
 
   const handleRemovePress = (index) => {
-    const updatedDeviceIds = [...deviceIds];
+    const updatedDeviceIds = [...originalDeviceIds];
     updatedDeviceIds.splice(index, 1);
 
-    // Update both deviceIds and originalDeviceIds
-    setDeviceIds(updatedDeviceIds);
+    console.log("Updated Device Ids:", updatedDeviceIds);
+
+    // Set the flag to indicate that removal is happening
+    setIsRemoving(true);
+
+    // Update the originalDeviceIds state first
     setOriginalDeviceIds(updatedDeviceIds);
+
+    // After the state is updated, reset the displayedDeviceIds state
+    setDisplayedDeviceIds(updatedDeviceIds);
 
     setSearchText("");
   };
@@ -38,30 +48,51 @@ const HomeScreen = ({ route }) => {
     const filteredDeviceIds = originalDeviceIds.filter((deviceId) =>
       deviceId.toLowerCase().includes(searchText.toLowerCase())
     );
-    setDeviceIds(filteredDeviceIds);
+    setDisplayedDeviceIds(filteredDeviceIds);
+
+    console.log("Filtered Device Ids:", filteredDeviceIds);
   };
 
   useEffect(() => {
-    // Update deviceIds state when the route parameters change
-    setOriginalDeviceIds(initialDeviceIds || []);
-    setDeviceIds(initialDeviceIds || []);
-  }, [initialDeviceIds]);
+    console.log("Original Device Ids after removal:", originalDeviceIds);
+
+    // Update the originalDeviceIds state first
+    setOriginalDeviceIds(originalDeviceIds);
+
+    // Always update displayedDeviceIds with the latest originalDeviceIds
+    setDisplayedDeviceIds(originalDeviceIds);
+
+    console.log("Displayed Device Ids after removal:", displayedDeviceIds);
+
+    // Navigation should only happen if it's not triggered by a removal action
+    if (!isRemoving) {
+      navigation.navigate("Home", { displayedDeviceIds: originalDeviceIds });
+    }
+
+    // Reset the flag after navigation check
+    setIsRemoving(false);
+  }, [originalDeviceIds, isRemoving, navigation]);
+
+  // Ensure that displayedDeviceIds is updated when the component mounts
+  useEffect(() => {
+    setDisplayedDeviceIds(originalDeviceIds);
+  }, [originalDeviceIds]);
 
   useEffect(() => {
-    // Update deviceIds state when the navigation state changes
     const unsubscribe = navigation.addListener("focus", () => {
-      setDeviceIds(originalDeviceIds);
+      setDisplayedDeviceIds(originalDeviceIds);
     });
 
     return unsubscribe;
   }, [originalDeviceIds, navigation]);
 
-  // Update deviceIds state when the searchText changes
   useEffect(() => {
     const filteredDeviceIds = originalDeviceIds.filter((deviceId) =>
       deviceId.toLowerCase().includes(searchText.toLowerCase())
     );
-    setDeviceIds(filteredDeviceIds);
+    setDisplayedDeviceIds(filteredDeviceIds);
+
+    console.log("Filtered Device Ids:", filteredDeviceIds);
   }, [searchText, originalDeviceIds]);
 
   return (
@@ -83,7 +114,7 @@ const HomeScreen = ({ route }) => {
         />
       </View>
       <View style={styles.deviceIdContainer}>
-        {deviceIds.map((deviceId, index) => (
+        {displayedDeviceIds.map((deviceId, index) => (
           <View key={index} style={styles.deviceIdBox}>
             <Text style={styles.header}>{` Device ID: ${deviceId}`}</Text>
             <Text style={styles.subHeader}> Progress </Text>
