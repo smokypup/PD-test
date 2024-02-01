@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#DDE1E1",
   },
   Boxes: {
-    marginTop: 150,
+    marginTop: 200,
     alignSelf: "center",
   },
   HeaderTextIcon: {
